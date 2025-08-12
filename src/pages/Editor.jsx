@@ -120,4 +120,19 @@ export default function Editor({ goHome }) {
         <input
           type="file"
           accept="image/*"
-          onChange
+          onChange={(e) => setFile(e.target.files[0])}
+          required
+          className="text-gray-300"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn border-accent text-accent w-full py-3 uppercase font-semibold"
+        >
+          {loading ? 'Uploading...' : 'Add Product'}
+        </button>
+        {msg && <p className="text-center mt-2">{msg}</p>}
+      </form>
+    </div>
+  )
+}
