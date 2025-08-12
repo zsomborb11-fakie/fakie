@@ -9,7 +9,7 @@ export default function Home({ goEditor }) {
     async function fetchProducts() {
       try {
         const res = await axios.get(
-          'https://api.jsonbin.io/v3/b/YOUR_JSONBIN_ID/latest',
+          `https://api.jsonbin.io/v3/b/${import.meta.env.VITE_JSONBIN_ID}/latest`,
           {
             headers: { 'X-Master-Key': import.meta.env.VITE_JSONBIN_KEY },
           }
@@ -40,7 +40,7 @@ export default function Home({ goEditor }) {
         )}
       </main>
       <footer className="mt-10 text-center text-muted text-sm">
-        Powered by JSONBin.io and Imgur
+        Powered by JSONBin.io
       </footer>
     </div>
   )
