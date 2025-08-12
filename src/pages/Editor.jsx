@@ -9,22 +9,13 @@ export default function Editor({ goHome }) {
   const [loading, setLoading] = useState(false)
   const [msg, setMsg] = useState('')
 
-  async function uploadImageToImgur(file) {
-    const clientId = import.meta.env.VITE_IMGUR_CLIENT_ID
-    const formData = new FormData()
-    formData.append('image', file)
-
-    try {
-      const res = await axios.post('https://api.imgur.com/3/image', formData, {
-        headers: {
-          Authorization: `Client-ID ${clientId}`,
-          Accept: 'application/json',
-        },
-      })
-      return res.data.data.link
-    } catch (e) {
-      return null
-    }
+  function toBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = (error) => reject(error)
+    })
   }
 
   async function submit(e) {
@@ -37,12 +28,7 @@ export default function Editor({ goHome }) {
         setLoading(false)
         return
       }
-      const imageUrl = await uploadImageToImgur(file)
-      if (!imageUrl) {
-        setMsg('Image upload failed.')
-        setLoading(false)
-        return
-      }
+      const base64Image = await toBase64(file)
 
       // Fetch current products from JSONBin
       const binId = import.meta.env.VITE_JSONBIN_ID
@@ -59,7 +45,7 @@ export default function Editor({ goHome }) {
         name,
         description: desc,
         price,
-        image: imageUrl,
+        image: base64Image,
       }
       products.push(newProduct)
 
